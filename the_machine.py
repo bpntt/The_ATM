@@ -7,21 +7,21 @@ class machine:
         pass
 
     def top_up(balance):
+        #Функция пополнения баланса
         topup = int(input("Enter the deposit amount:\n"))
         try:
             balance = balance + topup
             print(f"balace is: {balance}")
         except topup < 50:
-            #atm_exeptions.low_topup_error()
             logging.error("Withdraw cannot be less then 50")
             machine.top_up(balance)
 
         return balance
 
     def top_up_modifed(balance):
+        #Функция пополнения баланса модифицированая
         topup = int(input("Enter the deposit amount:\n"))
         if topup < 50:
-            #atm_exeptions.low_topup_error()
             logging.error("Topup cannot be less then 50")
             machine.top_up_modifed()
         else:
@@ -31,15 +31,14 @@ class machine:
         return balance
 
     def withdraw_cash(balance):
+        #Функция снятия наличных
         count_of_withdraw = int(input("Withdraw money:\n"))
         total_withdraw = count_of_withdraw + machine.tax_calculator(count_of_withdraw) 
         if count_of_withdraw < 50:
-            #atm_exeptions.low_withdraw_error()
             logging.error("Withdraw cannot be less then 50")
             print(f"balace is: {balance}")
             machine.withdraw_cash(balance)
         elif total_withdraw > balance:
-            #atm_exeptions.low_balance_error()
             logging.error("Balace have no enought money")
             print(f"balace is: {balance}")
         elif count_of_withdraw < balance:
@@ -54,14 +53,13 @@ class machine:
             return balance
         
     def withdraw_cash_modifed(balance):
+        #Функция снятия наличных модифицированая
         count_of_withdraw = int(input("Withdraw money:\n"))
         total_withdraw = count_of_withdraw + machine.tax_calculator(count_of_withdraw) 
         if count_of_withdraw < 50:
-            #atm_exeptions.low_withdraw_error()
             print(f"balace is: {balance}")
             machine.withdraw_cash_modifed(balance)
         elif total_withdraw > balance:
-            #atm_exeptions.low_balance_error()
             logging.error("Balace have no enought money")
             print(f"balace is: {balance}")
         elif count_of_withdraw < balance:
@@ -76,6 +74,7 @@ class machine:
             return balance
 
     def tax_calculator(count):
+        #Калькулятор налога
         tax = count*0.015
         if tax < 30:
             tax = 30
@@ -84,6 +83,7 @@ class machine:
         return tax
 
     def tax_calculator_modifed(count):
+        #Калькулятор налога модифицированый
         tax = count*0.015
         luxuary_tax = count*0.1
         if tax < 30:
@@ -92,6 +92,7 @@ class machine:
             tax= 600
         print(f"tax amound {tax} + 'luxury tax' {luxuary_tax}. Final tax: {tax + luxuary_tax}\n")
     def tax_politics():
+        #Question
         question = input("Questions about the commission for cash withdrawal:\n About the commission for cash withdrawal or top up(1)\n Tax calculator(2)\n")
         while True:
             if question == "1":
@@ -118,17 +119,17 @@ class machine:
                     break
     
     def  find (self, id_acc):
+            #Функция поиска аккаунта
             with open("account_list.csv","r", encoding="utf-8") as find_reader:
                 for row in find_reader:
                         if id_acc in row:
                             balance = row[3]
-                            print(balance)
                             return balance
                         else:
-                            return False
+                            break
     
-    def balance_check(balance):
-        print(f"\n{balance} \n")
+    def balance_check(id_acc):
+        print(machine.find(id_acc))
 
     def notification():
         print("After the following action, an additional 3 procent commission will be charged\n")
@@ -151,15 +152,12 @@ class machine:
     
     def hello_window():
         income = input("Welcome to the Atm! Do you have an account: 1(Y) / 2(N) \n:")
-        id_acc, name, f_name = str(machine.self_introdaction())
+        id_acc, name, f_name = machine.self_introdaction()
         match income:
             case "1"|"y"|"Y":
                 try:
-                            if machine.find(id_acc) == True:
-                                finded = machine.find(id_acc)
-                                return finded
-                            else:
-                                pass
+                    finded = machine.find(id_acc)
+                    return finded
                 except: 
                             logging.error("User not found")
                             answer = input("Do you want to create an account? \n1(Y)/2(N)")
@@ -212,5 +210,5 @@ class machine:
                     print(f"{choice} Is incorrect input\n")
 
 ex_1 = machine()
-ex_1.find("123")
+ex_1.main()
 

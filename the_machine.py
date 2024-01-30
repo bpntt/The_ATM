@@ -1,9 +1,6 @@
 from ast import main
 import csv
-import atm_exeptions
 import logging
-#import atm_exeptions
-#from atm_exeptions import  low_topup_error, low_balance_error, low_withdraw_error, user_not_found
 logging.basicConfig(filename='ex_log', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 class machine:
     def __init__(self) -> None:
@@ -119,8 +116,17 @@ class machine:
                     tax =int(input("Input you potentional withdraw:\n"))
                     machine.tax_calculator_modifed(tax)
                     break
-                    
-
+    
+    def  find (self, id_acc):
+            with open("account_list.csv","r", encoding="utf-8") as find_reader:
+                for row in find_reader:
+                        if id_acc in row:
+                            balance = row[3]
+                            print(balance)
+                            return balance
+                        else:
+                            return False
+    
     def balance_check(balance):
         print(f"\n{balance} \n")
 
@@ -128,58 +134,45 @@ class machine:
         print("After the following action, an additional 3 procent commission will be charged\n")
     
     def self_introdaction():
+        id_acc = input("Write you id_acc:\n")
         name= input("Write you name:\n")
         f_name = input("Write you family name:\n")
-        return name, f_name 
+        return id_acc, name, f_name 
     
-    def create_an_account(name_in,f_name_in):
-        print(name_in,f_name_in)
+    def create_an_account(id_acc, name_in,f_name_in):
+        balance = 0
         with open("account_list.csv", mode="a", encoding='utf-8') as w_file:
             file_writer = csv.writer(w_file, delimiter="|", lineterminator="\r")
-            file_writer.writerow([{name_in}, {f_name_in}, int(0)])
-            print(f"account has been created! name = {name_in}, family name = {f_name_in}, balace = 0")
+            file_writer.writerow([{id_acc}, {name_in}, {f_name_in}, "0"])
+            print(f"account has been created! id_acc is ={id_acc}, name = {name_in}, family name = {f_name_in}, balance = {balance}")
 
 
             
     
     def hello_window():
         income = input("Welcome to the Atm! Do you have an account: 1(Y) / 2(N) \n:")
-        print(income)
-        name, f_name = machine.self_introdaction()
-        print(name,f_name)
+        id_acc, name, f_name = str(machine.self_introdaction())
         match income:
-            case "1":
-                with open ("account_list.csv", "r") as file:
-                    read = csv.reader(file)
-                    print(read)
-                    for row in read: 
-                        if name and f_name in row:
-                            print(f"{name = }, {f_name =}, balace = {row[2]}")
-                            return int(row[2])
-                        else: 
-                            #atm_exeptions.user_not_found()
+            case "1"|"y"|"Y":
+                try:
+                            if machine.find(id_acc) == True:
+                                finded = machine.find(id_acc)
+                                return finded
+                            else:
+                                pass
+                except: 
                             logging.error("User not found")
                             answer = input("Do you want to create an account? \n1(Y)/2(N)")
                             match answer:
                                 case "1" |"Y"|"y":
-                                    machine.create_an_account(name,f_name)
+                                    machine.create_an_account(id_acc, name,f_name)
+                                    machine.hello_window()
                                 case "2"|"N"|"n":
                                     print("Good bye!")
                                     machine.hello_window()
             case "2"|"N"|"n":
-                machine.create_an_account(name,f_name)
-                with open ("account_list.csv", "r") as file:
-                    read = csv.reader(file)
-                    for row in read: 
-                        if name and f_name in row:
-                            print(f"{name = }, {f_name =}, balace = {row[2]}")
-                            return int(row[2])
-
-    #def changer (input_code):
-    #    match input_code:
-    #        case "1":
-    #            with open
-    
+                machine.create_an_account(id_acc, name,f_name)
+                machine.hello_window()
 
 
     def main(self):
@@ -219,5 +212,5 @@ class machine:
                     print(f"{choice} Is incorrect input\n")
 
 ex_1 = machine()
-ex_1.main()
+ex_1.find("123")
 

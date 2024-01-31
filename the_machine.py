@@ -120,13 +120,16 @@ class machine:
     
     def  find (self, id_acc):
             #Функция поиска аккаунта
-            with open("account_list.csv","r", encoding="utf-8") as find_reader:
-                for row in find_reader:
-                        if id_acc in row:
-                            balance = row[3]
-                            return balance
-                        else:
-                            break
+        with open("account_list.csv", encoding="utf-8") as file:
+            read_file = csv.reader(file)
+            for row in read_file:
+                if id_acc in row:
+                    read_file = list(row)
+                    return read_file[3]
+                else:
+                    logging.error("user not found")
+                    return False
+            
     
     def balance_check(id_acc):
         print(machine.find(id_acc))
@@ -143,9 +146,24 @@ class machine:
     def create_an_account(id_acc, name_in,f_name_in):
         balance = 0
         with open("account_list.csv", mode="a", encoding='utf-8') as w_file:
-            file_writer = csv.writer(w_file, delimiter="|", lineterminator="\r")
+            file_writer = csv.writer(w_file, lineterminator="\r")
             file_writer.writerow([{id_acc}, {name_in}, {f_name_in}, "0"])
             print(f"account has been created! id_acc is ={id_acc}, name = {name_in}, family name = {f_name_in}, balance = {balance}")
+    
+    def user_not_found(id_acc,name,f_name):
+        answer = input("Do you want to create an account? \n1(Y)/2(N)")
+        try:
+            match answer:
+                case "1" |"Y"|"y":
+                        machine.create_an_account(id_acc, name,f_name)
+                        machine.hello_window()
+                case "2"|"N"|"n":
+                        print("Good bye!")
+                        machine.hello_window()
+        except:
+            logging.ERROR("Wrong input")
+            print("Wrong input")
+            machine.user_not_found()
 
 
             
@@ -155,23 +173,15 @@ class machine:
         id_acc, name, f_name = machine.self_introdaction()
         match income:
             case "1"|"y"|"Y":
-                try:
                     finded = machine.find(id_acc)
-                    return finded
-                except: 
-                            logging.error("User not found")
-                            answer = input("Do you want to create an account? \n1(Y)/2(N)")
-                            match answer:
-                                case "1" |"Y"|"y":
-                                    machine.create_an_account(id_acc, name,f_name)
-                                    machine.hello_window()
-                                case "2"|"N"|"n":
-                                    print("Good bye!")
-                                    machine.hello_window()
+                    if finded == true:
+                        return finded
+                    else: 
+                    machine.user_not_found(id_acc, name, f_name)
+
             case "2"|"N"|"n":
                 machine.create_an_account(id_acc, name,f_name)
                 machine.hello_window()
-
 
     def main(self):
         account_balance = machine.hello_window()
